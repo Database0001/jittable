@@ -47,7 +47,7 @@ $users = $db->query("SELECT * FROM users")->fetchAll(PDO::FETCH_ASSOC);
     <script src="assets/js/jquery.js"></script>
 
     <script>
-        function jittable(id) {
+        function jittable(id, data) {
             let table = document.querySelector(id);
             let th = document.querySelectorAll(id + ' thead th');
             let td = document.querySelectorAll(id + ' tbody td');
@@ -75,7 +75,6 @@ $users = $db->query("SELECT * FROM users")->fetchAll(PDO::FETCH_ASSOC);
 
                             let _t = item.children[0].value;
                             let cache = item.getAttribute("data-value");
-
                             item.removeAttribute("editing");
 
                             if (cache != _t) {
@@ -91,19 +90,40 @@ $users = $db->query("SELECT * FROM users")->fetchAll(PDO::FETCH_ASSOC);
                                     }
                                 };
 
-                                $.post('ajax/update.php', request, function(e) {
+                                $.post(data['url'], request, function(e) {
+
                                     if (e.response) {
                                         item.setAttribute("data-value", _t);
                                         item.innerHTML = _t;
                                         item.style.background = "";
+                                        item.style.color = "black";
                                     } else {
-                                        item.innerHTML = cache;
                                         item.style.background = "red";
+                                        item.style.color = "white";
                                     }
-                                    console.log(e);
+
+                                    data['callback'](e);
                                 });
+
+                                // function(e) {
+
+                                //     if (e.response) {
+                                //         item.setAttribute("data-value", _t);
+                                //         item.innerHTML = _t;
+                                //         item.style.background = "";
+                                //         item.style.color = "black";
+                                //     } else {
+                                //         item.innerHTML = cache;
+                                //         item.style.background = "red";
+                                //         item.style.color = "white";
+                                //     }
+                                //     console.log(e);
+
+                                // }
+
                             } else {
                                 item.style.background = "";
+                                item.style.color = "black";
                                 item.innerHTML = cache;
                             }
                         }
@@ -112,7 +132,12 @@ $users = $db->query("SELECT * FROM users")->fetchAll(PDO::FETCH_ASSOC);
             });
         }
 
-        jittable('#example');
+        jittable('#example', {
+            url: "ajax/update.php",
+            callback: function(e) {
+                console.log(e);
+            }
+        });
     </script>
 
 </body>
