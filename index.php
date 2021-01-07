@@ -62,14 +62,14 @@ $users = $db->query("SELECT * FROM users")->fetchAll(PDO::FETCH_ASSOC);
                         let parent = item.parentElement;
 
                         if (f == null) {
-                            item.innerHTML = `<input type="text" value="${t}" id="${hash}" style="width: ${t.length}em;" oninput="this.style.width = this.value.length + 'em'">`;
+                            item.innerHTML = `<input type="text" value="${t}" id="${hash}" style="width: ${(t.length/2)+3}em;" oninput="this.style.width = (this.value.length/2)+3 + 'em'">`;
                             let i = item.children[0];
 
                             let elemLen = i.value.length;
                             i.selectionStart = elemLen;
                             i.selectionEnd = elemLen;
                             i.focus();
-                            
+
                             item.setAttribute("editing", "true");
                         } else {
 
@@ -95,12 +95,15 @@ $users = $db->query("SELECT * FROM users")->fetchAll(PDO::FETCH_ASSOC);
                                     if (e.response) {
                                         item.setAttribute("data-value", _t);
                                         item.innerHTML = _t;
+                                        item.style.background = "";
                                     } else {
                                         item.innerHTML = cache;
+                                        item.style.background = "red";
                                     }
                                     console.log(e);
                                 });
                             } else {
+                                item.style.background = "";
                                 item.innerHTML = cache;
                             }
                         }
