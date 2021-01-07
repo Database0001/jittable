@@ -64,27 +64,39 @@ $users = $db->query("SELECT * FROM users")->fetchAll(PDO::FETCH_ASSOC);
                         if (f == null) {
                             item.innerHTML = `<input type="text" value="${t}" id="${hash}">`;
                             item.children[0].focus();
-                            item.setAttribute("editing", "");
+                            item.setAttribute("editing", "true");
                         } else {
-                            let _t = item.children[0].value;
-                            item.setAttribute("data-value", _t);
-                            item.innerHTML = _t;
-                            item.removeAttribute("editing");
-                            let request = {
-                                table: table.getAttribute('data-table'),
-                                key: {
-                                    key: parent.getAttribute('index'),
-                                    value: parent.getAttribute('value')
-                                },
-                                values: {
-                                    set: item.getAttribute('data-key'),
-                                    value: _t
-                                }
-                            };
 
-                            $.post('ajax/update.php', request, function(e) {
-                                console.log(e);
-                            });
+                            let _t = item.children[0].value;
+                            let cache = item.getAttribute("data-value");
+
+                            item.removeAttribute("editing");
+
+                            if (cache != _t) {
+                                let request = {
+                                    table: table.getAttribute('data-table'),
+                                    key: {
+                                        key: parent.getAttribute('index'),
+                                        value: parent.getAttribute('value')
+                                    },
+                                    values: {
+                                        set: item.getAttribute('data-key'),
+                                        value: _t
+                                    }
+                                };
+
+                                $.post('ajax/update.php', request, function(e) {
+                                    if (e.response) {
+                                        item.setAttribute("data-value", _t);
+                                        item.innerHTML = _t;
+                                    }else{
+                                        item.innerHTML = cache;
+                                    }
+                                    console.log(e);
+                                });
+                            }else{
+                                item.innerHTML = cache;
+                            }
                         }
                     });
                 }
