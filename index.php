@@ -15,10 +15,10 @@ $users = $db->query("SELECT * FROM users")->fetchAll(PDO::FETCH_ASSOC);
         tr,
         td {
             padding: 5px;
-            user-select: none;
         }
 
         td:not([edit]) {
+            user-select: none;
             cursor: pointer;
         }
     </style>

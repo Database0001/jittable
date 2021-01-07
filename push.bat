@@ -8,6 +8,6 @@ title PUSH
 	set/p "cho=>"
 	git add .
 	git commit -m "%cho%"
-	git push origin main
+	git push origin v2
 	goto bas
 goto bas
